@@ -1,36 +1,17 @@
 public class Tile {
 
-    private int row;
-    private int col;
-    private int tileLevel;
+    boolean isOccupied;
 
-    public Tile(int row, int col, int tileLevel){
-        this.row = row;
-        this.col = col;
-        this.tileLevel = tileLevel;
+    public Tile(boolean isOccupied) {
+        this.isOccupied = isOccupied;
     }
 
-    public int getRow() {
-        return row;
+    public boolean isOccupied() {
+        return isOccupied;
     }
 
-    public int getCol() {
-        return col;
+    public void setOccupied(boolean occupied) {
+        isOccupied = occupied;
     }
-
-    public int getTileLevel() {
-        return tileLevel;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public void setCol(int col) {
-        this.col = col;
-    }
-
-
-
 }
 

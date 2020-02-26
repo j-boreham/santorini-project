@@ -1,4 +1,4 @@
-import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
+
 
 import java.util.ArrayList;
 
@@ -21,10 +21,10 @@ public class Player {
 
 
 
-    public Tile placeBuilder(int row, int col, BuilderPiece builder){
+    public Tile placeBuilder(int row, int col){
 
         Tile placementTile = new Tile(row,col,0);
-        builder.setCurrentTile(placementTile);
+        builder1.setCurrentTile(placementTile);
         return placementTile;
     }
 

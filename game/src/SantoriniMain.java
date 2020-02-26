@@ -6,7 +6,7 @@ public class SantoriniMain {
         Player redPlayer = new Player(playerTwo, pTwoColour);
         Board gameBoard =  new Board();
         SantoriniGame gameInstance = new SantoriniGame(gameBoard,bluePlayer,redPlayer);
-
+        gameInstance.printBoard();
 
     }
 }
