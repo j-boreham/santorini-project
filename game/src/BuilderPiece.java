@@ -1,5 +1,6 @@
 import java.util.ArrayList;
-
+import java.util.Arrays;
+import java.util.List;
 
 // Class for representing a builder from Santorini
 public class BuilderPiece {
@@ -8,14 +9,17 @@ public class BuilderPiece {
     protected int xCoordinate;
     protected int yCoordinate;
     protected int zCoordinate;
-    //protected ArrayList<Tile> validMoveSet;
+    protected List<Move> possibleMoves;
 
+    public BuilderPiece(){
+
+    }
 
     public BuilderPiece(int xCoordinate, int yCoordinate, int zCoordinate) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.zCoordinate = zCoordinate;
-        //this.validMoveSet = calculateValidMoves();
+        this.possibleMoves = getPossibleMoves();
     }
 
     public void setxCoordinate(int xCoordinate) {
@@ -42,6 +46,24 @@ public class BuilderPiece {
         return zCoordinate;
     }
 
+    public List<Move> getPossibleMoves(){
+        Move moveNorth = new Move(0,1);
+        Move moveNorthEast = new Move(1,1);
+        Move moveEast = new Move(1,0);
+        Move moveSouthEast = new Move(-1,1);
+        Move moveSouth = new Move(0,-1);
+        Move moveSouthWest = new Move(-1,-1);
+        Move moveWest = new Move(-1,0);
+        Move moveNorthWest = new Move(-1,1);
+        return Arrays.asList(moveNorth,moveNorthEast,moveEast,moveSouthEast,moveSouth,moveSouthWest,moveWest,moveNorthWest);
+    }
+
+    public boolean checkLevel3() {
+        if (this.getzCoordinate()==3){
+            return true;
+        }else return false;
+    }
+
 
     //    //Calculate a set of tiles that are valid moves
 //    public ArrayList<Tile> calculateValidMoves() {
@@ -50,9 +72,5 @@ public class BuilderPiece {
 //        return possibleMoves;
 //    }
 
-//    public boolean checkLevel3() {
-//        if (this.==3)
-//            return true;
-//        else return false;
-//    }
+
 }
