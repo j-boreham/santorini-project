@@ -34,8 +34,6 @@ public class SantoriniGame {
 
             //Printing the X Y from the top right left corner to make it readable.
             for (int x = 1; x >-1 ; x--) {
-            //for (int x = 0; x < 2 ; x++) {
-                //for (int x = 1; x > -1; x--) {
                 for (int y = 0; y < 2; y++) {
                     if (board[z][x][y].isOccupied) {
                         System.out.print("[x]");
