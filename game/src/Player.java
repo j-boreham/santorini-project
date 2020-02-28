@@ -61,36 +61,39 @@ public class Player {
 
             }else throw new InvalidMoveException();
         }
-
-        return validMoveList;
+        if (validMoveList.isEmpty()) {
+            System.out.println("This piece is unable to move");
+            return null;
+        }else return validMoveList;
 
     }
 
+
+
+    //return Valid build list
     public List<Move> getValidBuildList(List<Move> validMoveList, BuilderPiece builder, Tile[][][] board)throws InvalidMoveException{
         List<Move> validBuildList = null;
+
 
         for (Move move :validMoveList) {
             Tile[][][] tempBoard = board;
             this.moveBuilder(tempBoard, builder, move);
 
             //Check the move is within the bounds of the board and that the prospective tile is not occupied with a builder
-            if (tempBoard[builder.getzCoordinate()][builder.getxCoordinate()][builder.getyCoordinate()].isOccupiedWithBuilder()
+            if (!(tempBoard[builder.getzCoordinate()][builder.getxCoordinate()][builder.getyCoordinate()].isOccupiedWithBuilder()
                     ||builder.getxCoordinate()<0 || builder.getxCoordinate()>1
                     ||builder.getyCoordinate()<0 || builder.getyCoordinate()>1
-                    ||builder.getzCoordinate()<0 || builder.getzCoordinate()>3) {
+                    ||builder.getzCoordinate()<0 || builder.getzCoordinate()>3)) {
 
                 validBuildList.add(move);
-            }else {
             }
         }
-        if (validBuildList.isEmpty()){
-            System.out.println("This piece is unable to move");
-            return null;
-        }else return validBuildList;
+        return validBuildList;
 
     }
 
-    public void buildLevel(Tile[][][] board,BuilderPiece builder, Move move){
+    //Method handling the build part of a players turn.
+    public void buildLevel(Tile[][][] board,BuilderPiece builder, Move move) throws InvalidMoveException{
 
         int zCoordinate = 0;
         int xCoordinate = builder.getxCoordinate();
@@ -99,11 +102,13 @@ public class Player {
         xCoordinate += move.getX();
         yCoordinate += move.getY();
 
+        //build from the builders new location incrementing the current build height by 1.
         while(board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithBuilding()){
             zCoordinate++;
         }
-        board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBuilding(true);
-
+        if (zCoordinate < 4) {
+            board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBuilding(true);
+        }else throw new InvalidMoveException();
     }
 
     public void moveBuilder(Tile[][][] board, BuilderPiece builder,Move move) throws InvalidMoveException {
@@ -147,10 +152,14 @@ public class Player {
 
 
 
-
+    public boolean unableToMove(){
+        if (this.builder1.getPossibleMoves().isEmpty())
+            return true;
+        else return false;
+    }
 
     public boolean wonByLevel3() {
-        if (this.builder1.checkLevel3()) //|| this.builder2.checkLevel3()
+        if (this.builder1.getzCoordinate()==3) //|| this.builder2.checkLevel3()
             return true;
         else return false;
     }

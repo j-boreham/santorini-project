@@ -6,9 +6,10 @@ public class Tile {
     public Tile() {
 
     }
-//    public Tile(boolean isOccupied) {
-//        this.isOccupied = isOccupied;
-//    }
+    public Tile(boolean isOccupiedWithBuilder,boolean isOccupiedWithBuilding) {
+        this.isOccupiedWithBuilder = isOccupiedWithBuilder;
+        this.isOccupiedWithBuilding = isOccupiedWithBuilding;
+    }
 
 
     public boolean isOccupiedWithBuilding() {
