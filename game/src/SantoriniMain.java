@@ -31,13 +31,13 @@ public class SantoriniMain {
         Scanner scanner = new Scanner(System.in);
 
         bluePlayer.placeBuilder(gameBoard,bluePlayer.builder1,1,1);
-        redPlayer.placeBuilder(gameBoard,redPlayer.builder1,0,0);
+        //redPlayer.placeBuilder(gameBoard,redPlayer.builder1,0,0);
         gameInstance.print();
         System.out.println("initial placement printed");
 
         //try move blue player E.
         try {
-            bluePlayer.moveBuilder(gameBoard,bluePlayer.builder1,moveHashMap.get("NE"));
+            bluePlayer.moveBuilder(gameBoard,bluePlayer.builder1,moveHashMap.get("SW"));
         }catch ( InvalidMoveException invalidMoveException){
             invalidMoveException.printStackTrace();
         }

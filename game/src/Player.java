@@ -1,6 +1,7 @@
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Player {
 
@@ -29,38 +30,12 @@ public class Player {
     }
 
     //filter a particular builders valid moves.
-    public List<Move> getValidMoveList(BuilderPiece builder,Tile[][][] board) throws InvalidMoveException{
+    public List<Move> getValidMoveList(Tile[][][] board,BuilderPiece builder) throws InvalidMoveException{
         List<Move> possibleMoves = builder.getPossibleMoves();
         List<Move> validMoveList = null;
-        int zCoordinateCounter = builder.getzCoordinate();
-        //for each of the possible moves check its validity and add it to teh set if legal
-        L1:for (Move move :possibleMoves) {
 
-            //Use temp board each time so not to affect the actual game board
-            Tile[][][] tempBoard = board;
-            this.moveBuilder(tempBoard, builder, move);
+        validMoveList = possibleMoves.stream().filter(move -> isValidMove(board,builder,move)).collect(Collectors.toList());
 
-            //Check the move is within the bounds of the board and that the prospective tile is not occupied with a builder
-            if (!(tempBoard[builder.getzCoordinate()][builder.getxCoordinate()][builder.getyCoordinate()].isOccupiedWithBuilder()
-                    ||builder.getxCoordinate()<0 || builder.getxCoordinate()>1
-                    ||builder.getyCoordinate()<0 || builder.getyCoordinate()>1
-                    ||builder.getzCoordinate()<0 || builder.getzCoordinate()>3)) {
-
-                //if (tempBoard[builder.getzCoordinate()][builder.getxCoordinate()][builder.getyCoordinate()].isOccupiedWithBuilding())
-
-                //obtain the buildheight of the prospective move, if it is a hop of more than one level do not add to list.
-                while(board[zCoordinateCounter][builder.getxCoordinate()][builder.getyCoordinate()].isOccupiedWithBuilding()){
-                    zCoordinateCounter++;
-                }
-                if (zCoordinateCounter-builder.getzCoordinate()>1){
-                    continue L1;
-                }
-                else {
-                    validMoveList.add(move);
-                }
-
-            }else throw new InvalidMoveException();
-        }
         if (validMoveList.isEmpty()) {
             System.out.println("This piece is unable to move");
             return null;
@@ -77,6 +52,7 @@ public class Player {
 
         for (Move move :validMoveList) {
             Tile[][][] tempBoard = board;
+
             this.moveBuilder(tempBoard, builder, move);
 
             //Check the move is within the bounds of the board and that the prospective tile is not occupied with a builder
@@ -118,10 +94,17 @@ public class Player {
         int xCoordinate = builder.getxCoordinate();
         int yCoordinate = builder.getyCoordinate();
 
-        List<Move> validMoves = getValidMoveList(builder,board);
+        List<Move> validMoves = getValidMoveList(board,builder);
 
+        //Check move is in valid movelist.
+        boolean inList = false;
+        for (Move play :validMoves) {
+            if (play.equals(move)){
+                inList = true;
+            }
+        }
         //If the move is a valid one make the move else throw exception.
-        if (validMoves.contains(move)){
+        if (inList){
             // remove the builder from the board
             board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBuilder(false);
 
@@ -140,14 +123,44 @@ public class Player {
         }else throw new InvalidMoveException();
 
 
-        //OLD Move method.
-//        // if the proposed new position is not already occupied, move the builder and update its position
-//        if (!board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithBuilder) {
-//            board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBuilder(true);
-//            builder.setxCoordinate(xCoordinate);
-//            builder.setyCoordinate(yCoordinate);
-//        } else throw new InvalidMoveException();
+    }
 
+    public boolean isValidMove(Tile[][][] board, BuilderPiece builder, Move move){
+        int z = builder.getzCoordinate();
+        int x = builder.getxCoordinate();
+        int y = builder.getyCoordinate();
+        //Tile currentLocation = board[z][x][y];
+
+        //update values for proposed move
+        int newZCounter = 0;
+        int newXCounter = x+move.getX();
+        int newYCounter = y+move.getY();
+
+        //Check array bounds first so doesnt throw out of bounds errors, i.e move is on the board.
+        if (newXCounter > 1 || newXCounter < 0 || newYCounter > 1 || newYCounter < 0){
+            return false;
+        }
+        //Check the hop in Z isnt greater than 1 level.
+        while(board[newZCounter][x][y].isOccupiedWithBuilding()){
+            newZCounter++;
+        }
+        if (newZCounter-z>1){
+            return false;
+        }
+
+        //If tile is on board and jump isnt too high then finally check if occupied with builder.
+        //Update x and y values
+        x+=move.getX();
+        y+=move.getY();
+        Tile prospectiveLocation = board[newZCounter][x][y];
+
+        //Check the move is within the bounds of the board and that the prospective tile is not occupied with a builder
+        if (!(prospectiveLocation.isOccupiedWithBuilder())){
+            return true;
+        }
+
+
+        return false;
     }
 
 
