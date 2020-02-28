@@ -28,23 +28,41 @@ public class SantoriniMain {
 
         Tile[][][] gameBoard = gameInstance.getBoard();
 
-        Scanner scanner = new Scanner(System.in);
 
         bluePlayer.placeBuilder(gameBoard,bluePlayer.builder1,1,1);
-        //redPlayer.placeBuilder(gameBoard,redPlayer.builder1,0,0);
+        redPlayer.placeBuilder(gameBoard,redPlayer.builder1,0,0);
         gameInstance.print();
         System.out.println("initial placement printed");
-
-        //try move blue player E.
-        try {
-            bluePlayer.moveBuilder(gameBoard,bluePlayer.builder1,moveHashMap.get("SW"));
-        }catch ( InvalidMoveException invalidMoveException){
-            invalidMoveException.printStackTrace();
-        }
-        gameInstance.print();
-
-//        while (true){
-//            System.out.println("R");
+        System.out.println("Welcome to Santorini, to make moves Enter the compass coordinates of the move" +
+                "you would like to make, ie N, NE etc.");
+//        //try move blue player E.
+//        try {
+//            bluePlayer.moveBuilder(gameBoard,bluePlayer.builder1,moveHashMap.get("SW"));
+//        }catch ( InvalidMoveException invalidMoveException){
+//            invalidMoveException.printStackTrace();
 //        }
+//        gameInstance.print();
+
+        Scanner scanner = new Scanner(System.in);
+        Player activePlayer = bluePlayer;
+        Player otherPlayer = redPlayer;
+        Player tmp = null;
+        while (!gameInstance.gameOver(activePlayer,otherPlayer)){
+            try {
+
+                //Initial human playable game with no building
+                System.out.println(activePlayer.getName() + " Player make your move");
+                String input = scanner.nextLine();
+                activePlayer.moveBuilder(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
+                gameInstance.print();
+                tmp = otherPlayer;
+                otherPlayer = activePlayer;
+                activePlayer = tmp;
+
+
+            }catch (InvalidMoveException invalidMoveException){
+                invalidMoveException.printStackTrace();
+            }
+        }
     }
 }

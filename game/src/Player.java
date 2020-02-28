@@ -20,6 +20,14 @@ public class Player {
         //builder2 = new BuilderPiece(4,4,4);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getPlayerColour() {
+        return playerColour;
+    }
+
     //Placing the builders at the beginning of the game.
     public void placeBuilder(Tile[][][] board, BuilderPiece builder, int xCoordinate, int yCoordinate){
 
@@ -47,7 +55,11 @@ public class Player {
 
     //return Valid build list
     public List<Move> getValidBuildList(List<Move> validMoveList, BuilderPiece builder, Tile[][][] board)throws InvalidMoveException{
-        List<Move> validBuildList = null;
+        List<Move> validBuildList = getValidMoveList(board,builder);
+        int zCoordinate = builder.getzCoordinate();
+        int xCoordinate = builder.getxCoordinate();
+        int yCoordinate = builder.getyCoordinate();
+
 
 
         for (Move move :validMoveList) {
@@ -84,7 +96,7 @@ public class Player {
         }
         if (zCoordinate < 4) {
             board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBuilding(true);
-        }else throw new InvalidMoveException();
+        }else throw new InvalidMoveException("POO");
     }
 
     public void moveBuilder(Tile[][][] board, BuilderPiece builder,Move move) throws InvalidMoveException {
@@ -120,11 +132,12 @@ public class Player {
             builder.setxCoordinate(xCoordinate);
             builder.setyCoordinate(yCoordinate);
             builder.setzCoordinate(zCoordinate);
-        }else throw new InvalidMoveException();
+        }else throw new InvalidMoveException("Invalid move check and try again");
 
 
     }
 
+    //Method that checks if a move is Legal.
     public boolean isValidMove(Tile[][][] board, BuilderPiece builder, Move move){
         int z = builder.getzCoordinate();
         int x = builder.getxCoordinate();
@@ -158,8 +171,6 @@ public class Player {
         if (!(prospectiveLocation.isOccupiedWithBuilder())){
             return true;
         }
-
-
         return false;
     }
 
