@@ -54,6 +54,8 @@ public class SantoriniMain {
                 System.out.println(activePlayer.getName() + " Player make your move");
                 String input = scanner.nextLine();
                 activePlayer.moveBuilder(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
+                input = scanner.nextLine();
+                activePlayer.buildLevel(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
                 gameInstance.print();
                 tmp = otherPlayer;
                 otherPlayer = activePlayer;

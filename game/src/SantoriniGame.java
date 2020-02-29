@@ -37,7 +37,9 @@ public class SantoriniGame {
                 for (int x = 0; x < 2; x++) {
                     if (board[z][x][y].isOccupiedWithBuilder) {
                         System.out.print("[x]");
-                    } else System.out.print("[]");
+                    } else if (board[z][x][y].isOccupiedWithBuilding) {
+                        System.out.print("[+]");
+                    }else System.out.print("[ ]");
                 }
                 System.out.println();
             }
