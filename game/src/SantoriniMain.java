@@ -3,9 +3,11 @@ import java.util.*;
 public class SantoriniMain {
     public static void main(String[] args) {
         // Initialise players with a single builder
-        String playerOne = "Jack", playerTwo = "Brandon", pOneColour = "Blue", pTwoColour = "Red";
-        Player bluePlayer = new Player(playerOne,pOneColour,new BuilderPiece());
-        Player redPlayer = new Player(playerTwo, pTwoColour,new BuilderPiece());
+        String playerOne = "Jack", playerTwo = "Brandon";
+        Alliance blueTeam = Alliance.BLUE;
+        Alliance redTeam = Alliance.RED;
+        Player bluePlayer = new Player(playerOne,blueTeam,new BuilderPiece(blueTeam));
+        Player redPlayer = new Player(playerTwo, redTeam,new BuilderPiece(redTeam));
 
         //Hashmap for move selection
         Map<String,Move> moveHashMap = new HashMap<String,Move>(){{
@@ -35,13 +37,8 @@ public class SantoriniMain {
         System.out.println("initial placement printed");
         System.out.println("Welcome to Santorini, to make moves Enter the compass coordinates of the move" +
                 "you would like to make, ie N, NE etc.");
-//        //try move blue player E.
-//        try {
-//            bluePlayer.moveBuilder(gameBoard,bluePlayer.builder1,moveHashMap.get("SW"));
-//        }catch ( InvalidMoveException invalidMoveException){
-//            invalidMoveException.printStackTrace();
-//        }
-//        gameInstance.print();
+
+
 
         Scanner scanner = new Scanner(System.in);
         Player activePlayer = bluePlayer;
@@ -54,6 +51,7 @@ public class SantoriniMain {
                 System.out.println(activePlayer.getName() + " Player make your move");
                 String input = scanner.nextLine();
                 activePlayer.moveBuilder(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
+                gameInstance.print();
                 input = scanner.nextLine();
                 activePlayer.buildLevel(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
                 gameInstance.print();

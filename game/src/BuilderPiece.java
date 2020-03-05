@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,17 +8,23 @@ public class BuilderPiece {
     protected int xCoordinate;
     protected int yCoordinate;
     protected int zCoordinate;
+    protected final Alliance pieceAlliance;
     protected List<Move> possibleMoves;
 
-    public BuilderPiece(){
-
+    public BuilderPiece( final Alliance pieceAlliance){
+        this.pieceAlliance = pieceAlliance;
     }
 
-    public BuilderPiece(int xCoordinate, int yCoordinate, int zCoordinate) {
+    public BuilderPiece(int xCoordinate, int yCoordinate, int zCoordinate, final Alliance colour) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.zCoordinate = zCoordinate;
+        this.pieceAlliance = colour;
         this.possibleMoves = getPossibleMoves();
+    }
+
+    public void printBuilderStats(){
+        System.out.println("builder @" + getxCoordinate() + getyCoordinate() + getzCoordinate());
     }
 
     public void setxCoordinate(int xCoordinate) {
@@ -34,6 +39,8 @@ public class BuilderPiece {
         this.zCoordinate = zCoordinate;
     }
 
+
+
     public int getxCoordinate() {
         return xCoordinate;
     }
@@ -44,6 +51,10 @@ public class BuilderPiece {
 
     public int getzCoordinate() {
         return zCoordinate;
+    }
+
+    public Alliance getPieceAlliance() {
+        return pieceAlliance;
     }
 
     public List<Move> getPossibleMoves(){

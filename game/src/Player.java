@@ -6,13 +6,13 @@ import java.util.stream.Collectors;
 public class Player {
 
     private String name;
-    private String playerColour;
+    private Alliance playerColour;
     public BuilderPiece builder1;
 
     //protected BuilderPiece builder2;
 
     // Initialise a player.
-    public Player(String name, String playerColour, BuilderPiece builder1){
+    public Player(String name, Alliance playerColour, BuilderPiece builder1){
 
         this.name = name;
         this.playerColour = playerColour;
@@ -24,14 +24,17 @@ public class Player {
         return name;
     }
 
-    public String getPlayerColour() {
+    public Alliance getPlayerColour() {
         return playerColour;
     }
 
     //Placing the builders at the beginning of the game.
     public void placeBuilder(Tile[][][] board, BuilderPiece builder, int xCoordinate, int yCoordinate){
-
-        board[0][xCoordinate][yCoordinate].setOccupiedWithBuilder(true);
+        if (playerColour.equals(Alliance.RED)){
+            board[0][xCoordinate][yCoordinate].setOccupiedWithRedBuilder(true);
+        }else{
+            board[0][xCoordinate][yCoordinate].setOccupiedWithBlueBuilder(true);
+        }
         builder.setxCoordinate(xCoordinate);
         builder.setyCoordinate(yCoordinate);
         builder.setzCoordinate(0);
@@ -65,10 +68,13 @@ public class Player {
 
     }
 
+    //Will need to handle builders 1 & 2 at some point get builders at location or something?
+
     //Method handling the build part of a players turn.
     public void buildLevel(Tile[][][] board,BuilderPiece builder, Move move) throws InvalidMoveException{
 
         List<Move> validBuilds = getValidBuildList(board, builder);
+        builder.printBuilderStats();
         int zCoordinate = 0;
         int xCoordinate = builder.getxCoordinate();
         int yCoordinate = builder.getyCoordinate();
@@ -82,14 +88,15 @@ public class Player {
         if (inList){
             xCoordinate += move.getX();
             yCoordinate += move.getY();
+            Tile proposedBuildLocation = board[zCoordinate][xCoordinate][yCoordinate];
             //build from the builders new location incrementing the current build height by 1.
-            while(board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithBuilding()){
+            while(proposedBuildLocation.isOccupiedWithBuilding()){
                 zCoordinate++;
             }
-            if (zCoordinate < 4) {
+            if (zCoordinate < 4 && !(proposedBuildLocation.isOccupiedWithBlueBuilder()||proposedBuildLocation.isOccupiedWithRedBuilder())){
                 board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBuilding(true);
-            }else throw new InvalidMoveException("oops");
-        }
+            }else throw new InvalidMoveException("oops Cant build there, try again");
+        }else throw new InvalidMoveException("oops Cant build there, try again");
     }
 
     public void moveBuilder(Tile[][][] board, BuilderPiece builder,Move move) throws InvalidMoveException {
@@ -110,8 +117,14 @@ public class Player {
         }
         //If the move is a valid one make the move else throw exception.
         if (inList){
+
             // remove the builder from the board
-            board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBuilder(false);
+            if (playerColour.equals(Alliance.RED)){
+                board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithRedBuilder(false);
+            }else{
+                board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBlueBuilder(false);
+            }
+
 
             // move the builder in accordance with the move
             xCoordinate += move.getX();
@@ -121,7 +134,11 @@ public class Player {
             }
 
             //Set the new tile to contain the builder and update its fields.
-            board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBuilder(true);
+            if (playerColour.equals(Alliance.RED)){
+                board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithRedBuilder(true);
+            }else{
+                board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBlueBuilder(true);
+            }
             builder.setxCoordinate(xCoordinate);
             builder.setyCoordinate(yCoordinate);
             builder.setzCoordinate(zCoordinate);
@@ -135,7 +152,6 @@ public class Player {
         int z = builder.getzCoordinate();
         int x = builder.getxCoordinate();
         int y = builder.getyCoordinate();
-        //Tile currentLocation = board[z][x][y];
 
         //update values for proposed move
         int newZCounter = 0;
@@ -161,11 +177,13 @@ public class Player {
         Tile prospectiveLocation = board[newZCounter][x][y];
 
         //Check the move is within the bounds of the board and that the prospective tile is not occupied with a builder
-        if (!(prospectiveLocation.isOccupiedWithBuilder())){
+        if (!(prospectiveLocation.isOccupiedWithRedBuilder()||prospectiveLocation.isOccupiedWithBlueBuilder())){
             return true;
         }
         return false;
     }
+
+
 
 
 

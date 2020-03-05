@@ -1,13 +1,15 @@
 public class Tile {
 
-    boolean isOccupiedWithBuilder;
+    boolean isOccupiedWithRedBuilder;
+    boolean isOccupiedWithBlueBuilder;
     boolean isOccupiedWithBuilding;
 
     public Tile() {
 
     }
-    public Tile(boolean isOccupiedWithBuilder,boolean isOccupiedWithBuilding) {
-        this.isOccupiedWithBuilder = isOccupiedWithBuilder;
+    public Tile(boolean isOccupiedWithRedBuilder, boolean isOccupiedWithBlueBuilder,boolean isOccupiedWithBuilding) {
+        this.isOccupiedWithRedBuilder = isOccupiedWithRedBuilder;
+        this.isOccupiedWithBlueBuilder = isOccupiedWithBlueBuilder;
         this.isOccupiedWithBuilding = isOccupiedWithBuilding;
     }
 
@@ -16,16 +18,20 @@ public class Tile {
         return isOccupiedWithBuilding;
     }
 
-    public boolean isOccupiedWithBuilder() {
-        return isOccupiedWithBuilder;
+    public boolean isOccupiedWithRedBuilder() {
+        return isOccupiedWithRedBuilder;
     }
+
+    public boolean isOccupiedWithBlueBuilder(){return isOccupiedWithBlueBuilder;}
 
     public void setOccupiedWithBuilding(boolean occupied) {
         isOccupiedWithBuilding = occupied;
     }
 
-    public void setOccupiedWithBuilder(boolean occupied) {
-        isOccupiedWithBuilder = occupied;
+    public void setOccupiedWithRedBuilder(boolean occupied) {
+        isOccupiedWithRedBuilder = occupied;
     }
+
+    public void setOccupiedWithBlueBuilder(boolean occupied){isOccupiedWithBlueBuilder = occupied;}
 }
 
