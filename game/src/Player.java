@@ -45,12 +45,9 @@ public class Player {
         List<Move> possibleMoves = builder.getPossibleMoves();
         List<Move> validMoveList = null;
 
-        validMoveList = possibleMoves.stream().filter(move -> isValidMove(board,builder,move,false)).collect(Collectors.toList());
+        validMoveList = possibleMoves.stream().filter(move -> isValidMove(board,builder,move,true)).collect(Collectors.toList());
 
-        if (validMoveList.isEmpty()) {
-            System.out.println("This piece is unable to move");
-            return null;
-        }else return validMoveList;
+        return validMoveList;
 
     }
 
@@ -60,7 +57,7 @@ public class Player {
     public List<Move> getValidBuildList( Tile[][][] board, BuilderPiece builder)throws InvalidMoveException{
         List<Move> possibleMoves = builder.getPossibleMoves();
         List<Move> validBuildList = null;
-        validBuildList = possibleMoves.stream().filter(move -> isValidMove(board,builder,move,true)).collect(Collectors.toList());
+        validBuildList = possibleMoves.stream().filter(move -> isValidMove(board,builder,move,false)).collect(Collectors.toList());
         if (validBuildList.isEmpty()){
             System.out.println("This piece cannot build");
             return null;
@@ -86,20 +83,23 @@ public class Player {
             }
         }
         if (inList){
+            builder.printBuilderStats();
             xCoordinate += move.getX();
             yCoordinate += move.getY();
-            Tile proposedBuildLocation = board[zCoordinate][xCoordinate][yCoordinate];
+
             //build from the builders new location incrementing the current build height by 1.
-            while(proposedBuildLocation.isOccupiedWithBuilding()){
+            while(board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithBuilding()){
                 zCoordinate++;
+                System.out.println(zCoordinate);
             }
-            if (zCoordinate < 4 && !(proposedBuildLocation.isOccupiedWithBlueBuilder()||proposedBuildLocation.isOccupiedWithRedBuilder())){
+            if (zCoordinate < 4 && !(board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithBlueBuilder()||board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithRedBuilder())){
+                builder.printBuilderStats();
                 board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBuilding(true);
             }else throw new InvalidMoveException("oops Cant build there, try again");
         }else throw new InvalidMoveException("oops Cant build there, try again");
     }
 
-    public void moveBuilder(Tile[][][] board, BuilderPiece builder,Move move) throws InvalidMoveException {
+    public boolean moveBuilder(Tile[][][] board, BuilderPiece builder,Move move) throws InvalidMoveException {
 
         //builder current coordinates set to unoccupied
         int zCoordinate = builder.getzCoordinate();
@@ -107,6 +107,11 @@ public class Player {
         int yCoordinate = builder.getyCoordinate();
 
         List<Move> validMoves = getValidMoveList(board,builder);
+
+        if (validMoves.isEmpty()){
+            return false;
+            //throw new InvalidMoveException("No Valid Moves");
+        }
 
         //Check move is in valid movelist.
         boolean inList = false;
@@ -126,9 +131,10 @@ public class Player {
             }
 
 
-            // move the builder in accordance with the move
+            // move the builder in accordance with the move resetting z to 0 for build check
             xCoordinate += move.getX();
             yCoordinate += move.getY();
+            zCoordinate = 0;
             while(board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithBuilding()){
                 zCoordinate++;
             }
@@ -144,11 +150,16 @@ public class Player {
             builder.setzCoordinate(zCoordinate);
         }else throw new InvalidMoveException("Invalid move check and try again");
 
+        return true;
 
     }
 
+    public BuilderPiece getBuilder1() {
+        return builder1;
+    }
+
     //Method that checks if a move is Legal.
-    public boolean isValidMove(Tile[][][] board, BuilderPiece builder, Move move,Boolean isBuilding){
+    public boolean isValidMove(Tile[][][] board, BuilderPiece builder, Move move,Boolean isLocationMove){
         int z = builder.getzCoordinate();
         int x = builder.getxCoordinate();
         int y = builder.getyCoordinate();
@@ -158,39 +169,40 @@ public class Player {
         int newXCounter = x+move.getX();
         int newYCounter = y+move.getY();
 
+        //These NEED to be changed in terms of BOARD WIDTH which should be set as a global constant
         //Check array bounds first so doesnt throw out of bounds errors, i.e move is on the board.
         if (newXCounter > 1 || newXCounter < 0 || newYCounter > 1 || newYCounter < 0){
             return false;
         }
-        while(board[newZCounter][x][y].isOccupiedWithBuilding()){
-            newZCounter++;
+        while(board[newZCounter][newXCounter][newYCounter].isOccupiedWithBuilding()){
+            if (newZCounter == 3 ){
+                return false;
+            }else {
+                newZCounter++;
+            }
+            //System.out.println( "This is building level count"+newZCounter);
         }
         //Check the hop in Z isnt greater than 1 level if a geographical move.
-        if (newZCounter-z>1 && !isBuilding){
+        if ((newZCounter - z > 1) && isLocationMove){
+            //System.out.println(z + "inside false move");
             return false;
         }
 
         //If tile is on board and jump isnt too high then finally check if occupied with builder.
         //Update x and y values
+        //System.out.println("this shouldnt be reached");
         x+=move.getX();
         y+=move.getY();
         Tile prospectiveLocation = board[newZCounter][x][y];
 
         //Check the move is within the bounds of the board and that the prospective tile is not occupied with a builder
         if (!(prospectiveLocation.isOccupiedWithRedBuilder()||prospectiveLocation.isOccupiedWithBlueBuilder())){
+//            System.out.print(newZCounter);
+//            System.out.print(x);
+//            System.out.println(y + "this is a valid move");
             return true;
         }
         return false;
-    }
-
-
-
-
-
-    public boolean unableToMove(){
-        if (this.builder1.getPossibleMoves().isEmpty())
-            return true;
-        else return false;
     }
 
     public boolean wonByLevel3() {

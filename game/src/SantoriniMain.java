@@ -43,14 +43,23 @@ public class SantoriniMain {
         Scanner scanner = new Scanner(System.in);
         Player activePlayer = bluePlayer;
         Player otherPlayer = redPlayer;
+        Boolean ableToMove = false;
         Player tmp = null;
-        while (!gameInstance.gameOver(activePlayer,otherPlayer)){
+        while (!gameInstance.gameOver()){
             try {
 
                 //Initial human playable game with no building
                 System.out.println(activePlayer.getName() + " Player make your move");
                 String input = scanner.nextLine();
-                activePlayer.moveBuilder(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
+                ableToMove = activePlayer.moveBuilder(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
+
+                //Check situation where player loses by
+                if (!ableToMove){
+                    tmp = otherPlayer;
+                    otherPlayer = activePlayer;
+                    activePlayer = tmp;
+                    break;
+                }
                 gameInstance.print();
                 input = scanner.nextLine();
                 activePlayer.buildLevel(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
@@ -63,6 +72,6 @@ public class SantoriniMain {
             }catch (InvalidMoveException invalidMoveException){
                 invalidMoveException.printStackTrace();
             }
-        }
+        } System.out.println(activePlayer.getName()+" has Won the game");
     }
 }

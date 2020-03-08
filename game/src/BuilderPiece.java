@@ -61,7 +61,7 @@ public class BuilderPiece {
         Move moveNorth = new Move(0,1);
         Move moveNorthEast = new Move(1,1);
         Move moveEast = new Move(1,0);
-        Move moveSouthEast = new Move(-1,1);
+        Move moveSouthEast = new Move(1,-1);
         Move moveSouth = new Move(0,-1);
         Move moveSouthWest = new Move(-1,-1);
         Move moveWest = new Move(-1,0);
