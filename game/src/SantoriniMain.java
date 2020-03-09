@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class SantoriniMain {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InvalidMoveException {
         // Initialise players with a single builder
         String playerOne = "Jack", playerTwo = "Brandon";
         Alliance blueTeam = Alliance.BLUE;
@@ -25,8 +25,6 @@ public class SantoriniMain {
         //create an instance of the game
         SantoriniGame gameInstance = new SantoriniGame(bluePlayer,redPlayer);
         gameInstance.initialiseBoard();
-        gameInstance.print();
-        System.out.println("Blank board printed");
 
         Tile[][][] gameBoard = gameInstance.getBoard();
 
@@ -43,35 +41,94 @@ public class SantoriniMain {
         Scanner scanner = new Scanner(System.in);
         Player activePlayer = bluePlayer;
         Player otherPlayer = redPlayer;
+        int winnerCount = 0;
         Boolean ableToMove = false;
         Player tmp = null;
-        while (!gameInstance.gameOver()){
-            try {
-
-                //Initial human playable game with no building
-                System.out.println(activePlayer.getName() + " Player make your move");
-                String input = scanner.nextLine();
-                ableToMove = activePlayer.moveBuilder(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
-
-                //Check situation where player loses by
-                if (!ableToMove){
-                    tmp = otherPlayer;
-                    otherPlayer = activePlayer;
-                    activePlayer = tmp;
-                    break;
-                }
-                gameInstance.print();
-                input = scanner.nextLine();
-                activePlayer.buildLevel(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
-                gameInstance.print();
-                tmp = otherPlayer;
-                otherPlayer = activePlayer;
-                activePlayer = tmp;
 
 
-            }catch (InvalidMoveException invalidMoveException){
-                invalidMoveException.printStackTrace();
+    while (!SantoriniGame.gameOver()) {
+        try {
+            String input = scanner.nextLine();
+            ableToMove = bluePlayer.moveBuilder(gameBoard, bluePlayer.builder1, moveHashMap.get(input.toUpperCase()));
+            gameInstance.print();
+            input = scanner.nextLine();
+            activePlayer.buildLevel(gameBoard, activePlayer.builder1, moveHashMap.get(input.toUpperCase()));
+            gameInstance.print();
+
+            if (SantoriniGame.gameOver()) {
+                break;
             }
-        } System.out.println(activePlayer.getName()+" has Won the game");
+
+            //ComputerMove
+            gameInstance.miniMax(gameBoard, 0, redPlayer);
+            System.out.println("Computer moved to: ");
+            gameInstance.printBoardState(gameInstance.getBoard());
+            gameBoard = gameInstance.getBoard();
+
+            winnerCount++;
+
+        }catch (InvalidMoveException invalidMoveException){
+            invalidMoveException.printStackTrace();
+        }
     }
+    if (winnerCount%2 == 0){
+        System.out.println("Blue team won the game!");
+    }else System.out.println("Red team won the game!");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //-----------------------------------------Two Person Human game----------------------------------------------//
+
+//        while (!gameInstance.gameOver()){
+//            try {
+//
+//                //Initial human playable game with no building
+//                System.out.println(activePlayer.getName() + " Player make your move");
+//                String input = scanner.nextLine();
+//                ableToMove = activePlayer.moveBuilder(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
+//
+//                //Check situation where player loses by
+//                if (!ableToMove){
+//                    tmp = otherPlayer;
+//                    otherPlayer = activePlayer;
+//                    activePlayer = tmp;
+//                    break;
+//                }
+//                gameInstance.print();
+//                input = scanner.nextLine();
+//                activePlayer.buildLevel(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
+//                gameInstance.print();
+//                tmp = otherPlayer;
+//                otherPlayer = activePlayer;
+//                activePlayer = tmp;
+//
+//
+//            }catch (InvalidMoveException invalidMoveException){
+//                invalidMoveException.printStackTrace();
+//            }
+//        } System.out.println(activePlayer.getName()+" has Won the game");
+
+
+    }//End of main
+
+
 }

@@ -110,9 +110,12 @@ public class SantoriniGame {
                 int currentScore = miniMax(possibleStates.get(i),depth +1, bluePlayer);
                 max = Math.max(currentScore, max);
 
-                if (depth == 0){
-                    System.out.println("optimal state to move to is:");
-                    printBoardState(possibleStates.get(i));
+                if (currentScore>=0) {
+                    if (depth == 0) {
+                        System.out.println("optimal state to move to is:");
+                        printBoardState(possibleStates.get(i));
+                        this.board = possibleStates.get(i);
+                    }
                 }
             }else if (maxiMizer.getPlayerColour()==Alliance.BLUE){
                 int currentScore = miniMax(possibleStates.get(i),depth+1,redPlayer);
@@ -120,14 +123,12 @@ public class SantoriniGame {
 
             }
         }
-        return 0;
+        return maxiMizer.getPlayerColour()==Alliance.RED? max:min;
     }
 
-    // need a function to reverse the 2 step process of state to move
+    // need a function to reverse the 2 step process of state to move.
+    public List<Tile[][][]> getStates(Tile[][][] board, Player currentPlayer) throws InvalidMoveException{
 
-
-
-    public List<Tile[][][]> getStates(Tile[][][] copyBoard, Player currentPlayer) throws InvalidMoveException{
 
         List<Tile[][][]> stateList = new List<Tile[][][]>() {
             @Override
@@ -245,16 +246,19 @@ public class SantoriniGame {
                 return null;
             }
         };
-        BuilderPiece currentBuilder = currentPlayer.getBuilder1();
-        List<Move> locationMoves = currentPlayer.getValidMoveList(copyBoard,currentBuilder);
+
+        List<Move> locationMoves = currentPlayer.getValidMoveList(board,currentPlayer.getBuilder1());
+
 
         //
         for (Move move: locationMoves) {
-
-            currentPlayer.moveBuilder(copyBoard,currentBuilder,move);
+            //Re set board and builder to be from initial state.
+            BuilderPiece currentBuilder = currentPlayer.getBuilder1();
+            Tile[][][] copyBoard = board;
+            currentPlayer.moveComputerBuilder(copyBoard,currentBuilder,move);
             List<Move> buildMoves = currentPlayer.getValidBuildList(copyBoard,currentBuilder);
             for (Move build: buildMoves) {
-                currentPlayer.buildLevel(copyBoard,currentBuilder,build);
+                currentPlayer.buildComputerLevel(copyBoard,currentBuilder,build);
                 stateList.add(copyBoard);
             }
         }
@@ -274,12 +278,12 @@ public class SantoriniGame {
             return 0;
     }
 
-    //Need to write an iterable collection of move pairs
-    public void getListOfWholeMoves(){
+//    //Need to write an iterable collection of move pairs
+//    public void getListOfWholeMoves(){
+//
+//    }
 
-    }
-
-    //Initial rudimentary
+    //Initial rudimentary State evaluation function.
     public int evaluationFunction(){
         int redScore=0, blueScore=0,z = 0;
         for (z = 0; z < 4; z++) {

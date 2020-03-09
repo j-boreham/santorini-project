@@ -154,6 +154,64 @@ public class Player {
 
     }
 
+    //Computer move doest need to check build list validity.
+    public void moveComputerBuilder(Tile[][][] board, BuilderPiece builder,Move move) throws InvalidMoveException {
+
+        //builder current coordinates set to unoccupied
+        int zCoordinate = builder.getzCoordinate();
+        int xCoordinate = builder.getxCoordinate();
+        int yCoordinate = builder.getyCoordinate();
+
+            // remove the builder from the board
+            if (playerColour.equals(Alliance.RED)){
+                board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithRedBuilder(false);
+            }else{
+                board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBlueBuilder(false);
+            }
+
+
+            // move the builder in accordance with the move resetting z to 0 for build check
+            xCoordinate += move.getX();
+            yCoordinate += move.getY();
+            zCoordinate = 0;
+            while(board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithBuilding()){
+                zCoordinate++;
+            }
+
+            //Set the new tile to contain the builder and update its fields.
+            if (playerColour.equals(Alliance.RED)){
+                board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithRedBuilder(true);
+            }else{
+                board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBlueBuilder(true);
+            }
+            builder.setxCoordinate(xCoordinate);
+            builder.setyCoordinate(yCoordinate);
+            builder.setzCoordinate(zCoordinate);
+    }
+
+    //Computer build shouldn't need checking.
+    public void buildComputerLevel(Tile[][][] board,BuilderPiece builder, Move move) throws InvalidMoveException{
+
+        int zCoordinate = 0;
+        int xCoordinate = builder.getxCoordinate();
+        int yCoordinate = builder.getyCoordinate();
+
+            builder.printBuilderStats();
+            xCoordinate += move.getX();
+            yCoordinate += move.getY();
+
+            //build from the builders new location incrementing the current build height by 1.
+            while(board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithBuilding()){
+                zCoordinate++;
+                System.out.println(zCoordinate);
+            }
+            if (zCoordinate < 4 && !(board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithBlueBuilder()||board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithRedBuilder())) {
+                builder.printBuilderStats();
+                board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBuilding(true);
+            }
+    }
+
+
     public BuilderPiece getBuilder1() {
         return builder1;
     }
