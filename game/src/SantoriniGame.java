@@ -137,7 +137,7 @@ public class SantoriniGame {
         for (Move move: locationMoves) {
             //Re set board and builder to be from initial state.
             BuilderPiece currentBuilder = builderCopy;
-            Tile[][][] copyBoard = new Tile[][][];
+            Tile[][][] copyBoard = deepCopy(board);
 
             //Execute move and get build list from new location
             currentPlayer.moveComputerBuilder(copyBoard,currentBuilder,move);
@@ -170,6 +170,11 @@ public class SantoriniGame {
 //    public void getListOfWholeMoves(){
 //
 //    }
+
+    //DeepCopy for board
+    <T> T[][][] deepCopy(T[][][] matrix) {
+        return java.util.Arrays.stream(matrix).map(el -> el.clone()).toArray($ -> matrix.clone());
+    }
 
     //Initial rudimentary State evaluation function.
     public int evaluationFunction(){
