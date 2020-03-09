@@ -23,6 +23,7 @@ public class BuilderPiece {
         this.possibleMoves = getPossibleMoves();
     }
 
+
     public void printBuilderStats(){
         System.out.println("builder @" + getxCoordinate() + getyCoordinate() + getzCoordinate());
     }

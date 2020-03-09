@@ -1,7 +1,4 @@
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 public class SantoriniGame {
 
@@ -130,136 +127,27 @@ public class SantoriniGame {
     public List<Tile[][][]> getStates(Tile[][][] board, Player currentPlayer) throws InvalidMoveException{
 
 
-        List<Tile[][][]> stateList = new List<Tile[][][]>() {
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public boolean contains(Object o) {
-                return false;
-            }
-
-            @Override
-            public Iterator<Tile[][][]> iterator() {
-                return null;
-            }
-
-            @Override
-            public Object[] toArray() {
-                return new Object[0];
-            }
-
-            @Override
-            public <T> T[] toArray(T[] a) {
-                return null;
-            }
-
-            @Override
-            public boolean add(Tile[][][] tiles) {
-                return false;
-            }
-
-            @Override
-            public boolean remove(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(Collection<? extends Tile[][][]> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(int index, Collection<? extends Tile[][][]> c) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-
-            @Override
-            public Tile[][][] get(int index) {
-                return new Tile[0][][];
-            }
-
-            @Override
-            public Tile[][][] set(int index, Tile[][][] element) {
-                return new Tile[0][][];
-            }
-
-            @Override
-            public void add(int index, Tile[][][] element) {
-
-            }
-
-            @Override
-            public Tile[][][] remove(int index) {
-                return new Tile[0][][];
-            }
-
-            @Override
-            public int indexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public int lastIndexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public ListIterator<Tile[][][]> listIterator() {
-                return null;
-            }
-
-            @Override
-            public ListIterator<Tile[][][]> listIterator(int index) {
-                return null;
-            }
-
-            @Override
-            public List<Tile[][][]> subList(int fromIndex, int toIndex) {
-                return null;
-            }
-        };
-
-        List<Move> locationMoves = currentPlayer.getValidMoveList(board,currentPlayer.getBuilder1());
+        List<Tile[][][]> stateList = new ArrayList<>();
+        BuilderPiece builderCopy = new BuilderPiece(currentPlayer.getBuilder1().getzCoordinate(),currentPlayer.getBuilder1().getxCoordinate(),
+                                                    currentPlayer.getBuilder1().getzCoordinate(),currentPlayer.getPlayerColour());
+        List<Move> locationMoves = currentPlayer.getValidMoveList(board,builderCopy);
 
 
-        //
+        //Add all possible end states to the list of final states.
         for (Move move: locationMoves) {
             //Re set board and builder to be from initial state.
-            BuilderPiece currentBuilder = currentPlayer.getBuilder1();
-            Tile[][][] copyBoard = board;
+            BuilderPiece currentBuilder = builderCopy;
+            Tile[][][] copyBoard = new Tile[][][];
+
+            //Execute move and get build list from new location
             currentPlayer.moveComputerBuilder(copyBoard,currentBuilder,move);
             List<Move> buildMoves = currentPlayer.getValidBuildList(copyBoard,currentBuilder);
+
+            //Create the final state of the move and the build, re
             for (Move build: buildMoves) {
-                currentPlayer.buildComputerLevel(copyBoard,currentBuilder,build);
-                stateList.add(copyBoard);
+                Tile[][][] buildCopyBoard = copyBoard;
+                currentPlayer.buildComputerLevel(buildCopyBoard,currentBuilder,build);
+                stateList.add(buildCopyBoard);
             }
         }
         return stateList;
