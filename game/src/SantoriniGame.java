@@ -108,7 +108,7 @@ public class SantoriniGame {
         for (int i = 0; i < possibleStates.size(); i++){
             if (maxiMizer.getPlayerColour()==Alliance.RED){
                 int currentScore = miniMax(possibleStates.get(i),depth +1, bluePlayer);
-                max = Math.max(currentScore, max);
+                max = Math.max(currentScore, min);
 
                 if (currentScore>=0) {
                     if (depth == 0) {
@@ -119,7 +119,7 @@ public class SantoriniGame {
                 }
             }else if (maxiMizer.getPlayerColour()==Alliance.BLUE){
                 int currentScore = miniMax(possibleStates.get(i),depth+1,redPlayer);
-                min = Math.min(currentScore,min);
+                min = Math.min(currentScore,max);
 
             }
         }
