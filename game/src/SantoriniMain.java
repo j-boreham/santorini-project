@@ -45,7 +45,7 @@ public class SantoriniMain {
         Boolean ableToMove = false;
         Player tmp = null;
 
-
+        //-------------------------------------AI Playing---------------------------------------------------------//
     while (!SantoriniGame.gameOver()) {
         try {
             String input = scanner.nextLine();
