@@ -1,4 +1,4 @@
-public class Tile {
+public class Tile{
 
     boolean isOccupiedWithRedBuilder;
     boolean isOccupiedWithBlueBuilder;

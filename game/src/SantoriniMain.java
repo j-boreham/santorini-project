@@ -46,8 +46,10 @@ public class SantoriniMain {
         Player tmp = null;
 
         //-------------------------------------AI Playing---------------------------------------------------------//
-    while (!SantoriniGame.gameOver()) {
+    while (!SantoriniGame.gameOver(gameBoard, bluePlayer)) {
         try {
+
+            // In AI version blue plays first.
             String input = scanner.nextLine();
             ableToMove = bluePlayer.moveBuilder(gameBoard, bluePlayer.builder1, moveHashMap.get(input.toUpperCase()));
             gameInstance.print();
@@ -55,15 +57,16 @@ public class SantoriniMain {
             activePlayer.buildLevel(gameBoard, activePlayer.builder1, moveHashMap.get(input.toUpperCase()));
             gameInstance.print();
 
-            if (SantoriniGame.gameOver()) {
+            //Check if move won the game for blue
+            if (SantoriniGame.gameOver(gameBoard, redPlayer)) {
                 break;
             }
 
-            //ComputerMove
+            //ComputerMove for RED
             gameInstance.miniMax(gameBoard, 0, redPlayer);
             System.out.println("Computer moved to: ");
-            gameInstance.printBoardState(gameInstance.getBoard());
-            gameBoard = gameInstance.getBoard();
+            gameInstance.printBoardState(gameBoard);
+            //gameBoard = gameInstance.getBoard();
 
             winnerCount++;
 

@@ -25,7 +25,7 @@ public class BuilderPiece {
 
 
     public void printBuilderStats(){
-        System.out.println("builder @" + getxCoordinate() + getyCoordinate() + getzCoordinate());
+        System.out.println("builder @"  + getzCoordinate() + getxCoordinate() + getyCoordinate());
     }
 
     public void setxCoordinate(int xCoordinate) {

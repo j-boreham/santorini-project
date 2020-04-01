@@ -203,10 +203,8 @@ public class Player {
             //build from the builders new location incrementing the current build height by 1.
             while(board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithBuilding()){
                 zCoordinate++;
-                System.out.println(zCoordinate);
             }
             if (zCoordinate < 4 && !(board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithBlueBuilder()||board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithRedBuilder())) {
-                builder.printBuilderStats();
                 board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBuilding(true);
             }
     }
