@@ -5,19 +5,19 @@ import java.util.stream.Collectors;
 
 public class Player {
 
+    final int WIDTH = 5;
     private String name;
     private Alliance playerColour;
     public BuilderPiece builder1;
-
-    //protected BuilderPiece builder2;
+    public BuilderPiece builder2;
 
     // Initialise a player.
-    public Player(String name, Alliance playerColour, BuilderPiece builder1){
+    public Player(String name, Alliance playerColour, BuilderPiece builder1, BuilderPiece builder2){
 
         this.name = name;
         this.playerColour = playerColour;
         this.builder1 = builder1;
-        //builder2 = new BuilderPiece(4,4,4);
+        this.builder2 = builder2;
     }
 
     public String getName() {
@@ -196,7 +196,7 @@ public class Player {
         int xCoordinate = builder.getxCoordinate();
         int yCoordinate = builder.getyCoordinate();
 
-            builder.printBuilderStats();
+            //builder.printBuilderStats();
             xCoordinate += move.getX();
             yCoordinate += move.getY();
 
@@ -214,6 +214,8 @@ public class Player {
         return builder1;
     }
 
+    public BuilderPiece getBuilder2(){return builder2;}
+
     //Method that checks if a move is Legal.
     public boolean isValidMove(Tile[][][] board, BuilderPiece builder, Move move,Boolean isLocationMove){
         int z = builder.getzCoordinate();
@@ -227,7 +229,7 @@ public class Player {
 
         //These NEED to be changed in terms of BOARD WIDTH which should be set as a global constant
         //Check array bounds first so doesnt throw out of bounds errors, i.e move is on the board.
-        if (newXCounter > 1 || newXCounter < 0 || newYCounter > 1 || newYCounter < 0){
+        if (newXCounter > WIDTH-1 || newXCounter < 0 || newYCounter > WIDTH-1 || newYCounter < 0){
             return false;
         }
         while(board[newZCounter][newXCounter][newYCounter].isOccupiedWithBuilding()){
@@ -253,17 +255,10 @@ public class Player {
 
         //Check the move is within the bounds of the board and that the prospective tile is not occupied with a builder
         if (!(prospectiveLocation.isOccupiedWithRedBuilder()||prospectiveLocation.isOccupiedWithBlueBuilder())){
-//            System.out.print(newZCounter);
-//            System.out.print(x);
-//            System.out.println(y + "this is a valid move");
+
             return true;
         }
         return false;
     }
 
-    public boolean wonByLevel3() {
-        if (this.builder1.getzCoordinate()==3) //|| this.builder2.checkLevel3()
-            return true;
-        else return false;
-    }
 }
