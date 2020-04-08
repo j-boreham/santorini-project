@@ -68,25 +68,21 @@ public class SantoriniMain {
         try {
 
             Random rand= new Random();
-            //--------------------------Strategy 1 Random------------//
+            //--------------------------Strategy 2 Climb as high as possible- Greedy-----------//
             //Blue plays first
             List<Tile[][][]> possibleMovesBlue1 = gameInstance.getStates(gameBoard, bluePlayer,blueBuilder1);
             List<Tile[][][]> possibleMovesBlue2 = gameInstance.getStates(gameBoard, bluePlayer, blueBuilder2);
             possibleMovesBlue1.addAll(possibleMovesBlue2);
 
 
-            Tile[][][] newStateBlue = possibleMovesBlue1.get(rand.nextInt(possibleMovesBlue1.size()));
+            Tile[][][] newStateBlue = possibleMovesBlue1.get(gameInstance.selectBestMove(possibleMovesBlue1, bluePlayer));
+                    ///possibleMovesBlue1.get(rand.nextInt(possibleMovesBlue1.size()));
             List<int[]> newPositionsBlue = gameInstance.getPieceCoordinatesFromState(newStateBlue, Alliance.BLUE);
 //            System.out.println(" blue builder before: " + " size of new builder positions" + newPositionsBlue.size());
 //            blueBuilder1.printBuilderStats();
-            blueBuilder1.setzCoordinate(newPositionsBlue.get(0)[0]);
-            blueBuilder1.setxCoordinate(newPositionsBlue.get(0)[1]);
-            blueBuilder1.setyCoordinate(newPositionsBlue.get(0)[2]);
 
-
-            blueBuilder2.setzCoordinate(newPositionsBlue.get(1)[0]);
-            blueBuilder2.setxCoordinate(newPositionsBlue.get(1)[1]);
-            blueBuilder2.setyCoordinate(newPositionsBlue.get(1)[2]);
+            blueBuilder1.setCoordinates(newPositionsBlue.get(0));
+            blueBuilder2.setCoordinates(newPositionsBlue.get(1));
 
             gameBoard = newStateBlue;
 
@@ -104,24 +100,22 @@ public class SantoriniMain {
 
 
             //ComputerMove for RED
-            //--------------------------Strategy 1 Random------------//
-            List<Tile[][][]> possibleMovesRed1 = gameInstance.getStates(gameBoard, redPlayer,redBuilder1);
-            List<Tile[][][]> possibleMovesRed2 = gameInstance.getStates(gameBoard, redPlayer, redBuilder2);
-            possibleMovesRed1.addAll(possibleMovesRed2);
+            //--------------------------Strategy 1 MiniMax height priority------------//
+//            List<Tile[][][]> possibleMovesRed1 = gameInstance.getStates(gameBoard, redPlayer,redBuilder1);
+//            List<Tile[][][]> possibleMovesRed2 = gameInstance.getStates(gameBoard, redPlayer, redBuilder2);
+//            possibleMovesRed1.addAll(possibleMovesRed2);
 
 
-            Tile[][][] newStateRed = possibleMovesRed1.get(rand.nextInt(possibleMovesRed1.size()));
-            List<int[]> newPositionsRed = gameInstance.getPieceCoordinatesFromState(newStateRed, Alliance.RED);
+            //Tile[][][] newStateRed = possibleMovesRed1.get(rand.nextInt(possibleMovesRed1.size()));
+            gameInstance.miniMax(gameBoard,0,redPlayer);
+            //Tile[][][] newStateRed = possibleMovesRed1.get(gameInstance.reduceOppPossMoves(possibleMovesRed1, bluePlayer));
+            //List<int[]> newPositionsRed = gameInstance.getPieceCoordinatesFromState(newStateRed, Alliance.RED);
 
-            redBuilder1.setzCoordinate(newPositionsRed.get(0)[0]);
-            redBuilder1.setxCoordinate(newPositionsRed.get(0)[1]);
-            redBuilder1.setyCoordinate(newPositionsRed.get(0)[2]);
 
-            redBuilder2.setzCoordinate(newPositionsRed.get(1)[0]);
-            redBuilder2.setxCoordinate(newPositionsRed.get(1)[1]);
-            redBuilder2.setyCoordinate(newPositionsRed.get(1)[2]);
+            //redBuilder1.setCoordinates(newPositionsRed.get(0));
+            //redBuilder2.setCoordinates(newPositionsRed.get(1));
 
-            gameBoard = newStateRed;
+            //gameBoard = newStateRed;
 
 //            System.out.println("Red builder: ");
 //            redBuilder1.printBuilderStats();

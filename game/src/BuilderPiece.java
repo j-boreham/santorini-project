@@ -54,6 +54,14 @@ public class BuilderPiece {
         return zCoordinate;
     }
 
+    public int[] getCoordinates() {return new int[]{zCoordinate, xCoordinate, yCoordinate};}
+
+    public void setCoordinates(int[] coordinates){
+        this.zCoordinate= coordinates[0];
+        this.xCoordinate= coordinates[1];
+        this.yCoordinate= coordinates[2];
+    }
+
     public Alliance getPieceAlliance() {
         return pieceAlliance;
     }
