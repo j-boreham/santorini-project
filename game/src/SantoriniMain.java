@@ -7,8 +7,6 @@ public class SantoriniMain {
         String playerOne = "Jack", playerTwo = "Brandon";
         Alliance blueTeam = Alliance.BLUE;
         Alliance redTeam = Alliance.RED;
-        Player bluePlayer = new Player(playerOne,blueTeam,new BuilderPiece(blueTeam), new BuilderPiece(blueTeam));
-        Player redPlayer = new Player(playerTwo, redTeam,new BuilderPiece(redTeam), new BuilderPiece(redTeam));
 
         //Hashmap for move selection
         Map<String,Move> moveHashMap = new HashMap<String,Move>(){{
@@ -23,130 +21,164 @@ public class SantoriniMain {
 
         }};
 
-        //create an instance of the game
-        SantoriniGame gameInstance = new SantoriniGame(bluePlayer,redPlayer);
-        gameInstance.initialiseBoard();
 
-        Tile[][][] gameBoard = gameInstance.getBoard();
+        int redwins = 0;
+        int bluewins = 0;
+        int moveCount = 0;
+        for (int i = 0; i < 1; i++) { //Loop for game testing
+            Player bluePlayer = new Player(playerOne,blueTeam,new BuilderPiece(blueTeam), new BuilderPiece(blueTeam));
+            Player redPlayer = new Player(playerTwo, redTeam,new BuilderPiece(redTeam), new BuilderPiece(redTeam));
 
+            //create an instance of the game
+            SantoriniGame gameInstance = new SantoriniGame(bluePlayer,redPlayer);
+            gameInstance.initialiseBoard();
 
-        // Place each of the two builder for a a team
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Enter X and Y co-ordinates for Blue piece 1");
-        bluePlayer.placeBuilder(gameBoard,bluePlayer.builder1,2,2);//scanner.nextInt(),scanner.nextInt());
-        gameInstance.printBoardState(gameBoard);
-
-        System.out.println("Enter X and Y co-ordinates for Blue piece 2");
-        bluePlayer.placeBuilder(gameBoard,bluePlayer.builder2,3,3);//scanner.nextInt(),scanner.nextInt());
-        gameInstance.printBoardState(gameBoard);
-
-        System.out.println("Enter X and Y co-ordinates for Red piece 1");
-        redPlayer.placeBuilder(gameBoard,redPlayer.builder1,1,1);//scanner.nextInt(),scanner.nextInt());
-        gameInstance.printBoardState(gameBoard);
-
-        System.out.println("Enter X and Y co-ordinates for Red piece 2");
-        redPlayer.placeBuilder(gameBoard,redPlayer.builder2,1,3);//scanner.nextInt(),scanner.nextInt());
-        gameInstance.printBoardState(gameBoard);
-
-        System.out.println("initial placement printed");
-        //System.out.println("Welcome to Santorini, to make moves Enter the compass coordinates of the move" +
-          //      "you would like to make, ie N, NE etc.");
+            Tile[][][] gameBoard = gameInstance.getBoard();
 
 
-        BuilderPiece redBuilder1 = redPlayer.getBuilder1();
-        BuilderPiece blueBuilder1 = bluePlayer.getBuilder1();
+            // Place each of the two builder for a a team
+            Scanner scanner = new Scanner(System.in);
 
-        BuilderPiece redBuilder2 = redPlayer.getBuilder2();
-        BuilderPiece blueBuilder2 = bluePlayer.getBuilder2();
-
-
-
-
-    //-------------------------------------AI Playing vs AI -------------------------------------------------------//
-    while (!gameInstance.gameOver(gameBoard, bluePlayer)) {
-        try {
-
-            Random rand= new Random();
-            //--------------------------Strategy 2 Climb as high as possible- Greedy-----------//
-            //Blue plays first
-            List<Tile[][][]> possibleMovesBlue1 = gameInstance.getStates(gameBoard, bluePlayer,blueBuilder1);
-            List<Tile[][][]> possibleMovesBlue2 = gameInstance.getStates(gameBoard, bluePlayer, blueBuilder2);
-            possibleMovesBlue1.addAll(possibleMovesBlue2);
-
-
-            Tile[][][] newStateBlue = possibleMovesBlue1.get(gameInstance.selectBestMove(possibleMovesBlue1, bluePlayer));
-                    ///possibleMovesBlue1.get(rand.nextInt(possibleMovesBlue1.size()));
-            List<int[]> newPositionsBlue = gameInstance.getPieceCoordinatesFromState(newStateBlue, Alliance.BLUE);
-//            System.out.println(" blue builder before: " + " size of new builder positions" + newPositionsBlue.size());
-//            blueBuilder1.printBuilderStats();
-
-            blueBuilder1.setCoordinates(newPositionsBlue.get(0));
-            blueBuilder2.setCoordinates(newPositionsBlue.get(1));
-
-            gameBoard = newStateBlue;
-
-
-
-            System.out.println("Blue player:" + bluePlayer.getName()+ " moved to: ");
+            System.out.println("Enter X and Y co-ordinates for Blue piece 1");
+            bluePlayer.placeBuilder(gameBoard,bluePlayer.builder1,1,3);//scanner.nextInt(),scanner.nextInt());
             gameInstance.printBoardState(gameBoard);
 
+            System.out.println("Enter X and Y co-ordinates for Blue piece 2");
+            bluePlayer.placeBuilder(gameBoard,bluePlayer.builder2,3,2);//scanner.nextInt(),scanner.nextInt());
+            gameInstance.printBoardState(gameBoard);
 
-            //Check if move won the game for blue
-            if (gameInstance.gameOver(gameBoard, redPlayer)) {
-                System.out.println("Blue wins the game!");
-                break;
-            }
+            System.out.println("Enter X and Y co-ordinates for Red piece 1");
+            redPlayer.placeBuilder(gameBoard,redPlayer.builder1,2,2);//scanner.nextInt(),scanner.nextInt());
+            gameInstance.printBoardState(gameBoard);
 
+            System.out.println("Enter X and Y co-ordinates for Red piece 2");
+            redPlayer.placeBuilder(gameBoard,redPlayer.builder2,1,1);//scanner.nextInt(),scanner.nextInt());
+            gameInstance.printBoardState(gameBoard);
 
-            //ComputerMove for RED
-            //--------------------------Strategy 1 MiniMax height priority------------//
-//            List<Tile[][][]> possibleMovesRed1 = gameInstance.getStates(gameBoard, redPlayer,redBuilder1);
-//            List<Tile[][][]> possibleMovesRed2 = gameInstance.getStates(gameBoard, redPlayer, redBuilder2);
-//            possibleMovesRed1.addAll(possibleMovesRed2);
-
-
-            //Tile[][][] newStateRed = possibleMovesRed1.get(rand.nextInt(possibleMovesRed1.size()));
-            gameInstance.miniMax(gameBoard,0,redPlayer);
-            //Tile[][][] newStateRed = possibleMovesRed1.get(gameInstance.reduceOppPossMoves(possibleMovesRed1, bluePlayer));
-            //List<int[]> newPositionsRed = gameInstance.getPieceCoordinatesFromState(newStateRed, Alliance.RED);
+            System.out.println("initial placement printed");
+            //System.out.println("Welcome to Santorini, to make moves Enter the compass coordinates of the move" +
+            //      "you would like to make, ie N, NE etc.");
 
 
-            //redBuilder1.setCoordinates(newPositionsRed.get(0));
-            //redBuilder2.setCoordinates(newPositionsRed.get(1));
+            BuilderPiece redBuilder1 = redPlayer.getBuilder1();
+            BuilderPiece blueBuilder1 = bluePlayer.getBuilder1();
 
-            //gameBoard = newStateRed;
+            BuilderPiece redBuilder2 = redPlayer.getBuilder2();
+            BuilderPiece blueBuilder2 = bluePlayer.getBuilder2();
 
-//            System.out.println("Red builder: ");
-//            redBuilder1.printBuilderStats();
+
+
+            //-------------------------------------AI Playing vs AI -------------------------------------------------------//
+            while (!gameInstance.gameOver(gameBoard, bluePlayer)) {
+                try {
+
+                    //Random rand= new Random();
+                    //--------------------------Strategy 2 Climb as high as possible- Greedy-----------//
+                    //gameBoard = gameInstance.greedyMove(gameBoard,bluePlayer);
+
+
+//                    //----------------Blue MiniMax -------------------------//
+                    long blueStart = System.currentTimeMillis();
+                    int blueState = gameInstance.miniMaxBlue(gameBoard,0,bluePlayer,moveCount);
+                    long blueEnd = System.currentTimeMillis();
+                    System.out.println("Blue Time taken to compute: " + (blueEnd-blueStart));
+                    moveCount +=1;
+                    gameBoard = gameInstance.getBoard();
+
+                                // In AI version blue plays first.
+                    boolean ableToMove=false;
+
+                    //Initial human playable game with no building
+//                    System.out.println(bluePlayer.getName() + " Player make your move, enter b1 or b2 for the desired builder, then followed by the compass point move");
+//                    String input = scanner.nextLine();
+//                    if (input.equals("b1")){
+//                        input = scanner.nextLine();
+//                        ableToMove = bluePlayer.moveBuilder(gameBoard,bluePlayer.builder1,moveHashMap.get(input.toUpperCase()));
+//                        gameInstance.print();
+//                        input = scanner.nextLine();
+//                        bluePlayer.buildLevel(gameBoard,bluePlayer.builder1,moveHashMap.get(input.toUpperCase()));
+//                        gameInstance.print();
 //
-//            System.out.println("Blue builder: ");
-//            blueBuilder1.printBuilderStats();
+//
+//                    }else if (input.equals("b2")){
+//                        input = scanner.nextLine();
+//                        ableToMove = bluePlayer.moveBuilder(gameBoard,bluePlayer.builder2,moveHashMap.get(input.toUpperCase()));
+//                        gameInstance.print();
+//                        input = scanner.nextLine();
+//                        bluePlayer.buildLevel(gameBoard,bluePlayer.builder2,moveHashMap.get(input.toUpperCase()));
+//                        gameInstance.print();
+//                    }
 
-            //---------------------- Heuristic evaluation function ---------------//
-            //gameInstance.miniMax(gameBoard, 0, redPlayer);
+
+
+//                    System.out.println("Blue player:" + bluePlayer.getName()+ " moved to: ");
+//                    gameInstance.printBoardState(gameBoard);
+                    //Check if move won the game for blue
+                    if (gameInstance.gameOver(gameBoard, redPlayer)) {
+                        bluewins +=1;
+                        System.out.println("Blue wins the game!");
+                        break;
+                    }
+
+
+                    //ComputerMove for RED
+                    //--------------------------Strategy Random------------//
+
+                    //gameBoard = gameInstance.randomMove(gameBoard,redPlayer);
+
+
+//                    //------------------------ MiniMax Red
+                    long startTime = System.currentTimeMillis();
+                    int stateValue = gameInstance.miniMaxRed(gameBoard,0,redPlayer);
+                    long endTime = System.currentTimeMillis();
+
+                    gameBoard = gameInstance.getBoard();
+                    System.out.println("Time taken to compute: " + (endTime-startTime));
+                    moveCount+=1;
+//                    Tile[][][] newStateRed = gameInstance.getBoard();// possibleMovesRed1.get(stateValue);
+//
+//                    //System.out.println("This is what it thinks the board state is:");
+//                    //gameInstance.printBoardState(newStateRed);
+//
+//
+//                    List<int[]> newPositionsRed = gameInstance.getPieceCoordinatesFromState(newStateRed, Alliance.RED);
+//                    redBuilder1.setCoordinates(newPositionsRed.get(0));
+//                    redBuilder2.setCoordinates(newPositionsRed.get(1));
+//
+//                    gameBoard = newStateRed;
 
 
 
-            System.out.println("Red Player moved to: ");
-            gameInstance.printBoardState(gameBoard);
 
-            if (gameInstance.gameOver(gameBoard,bluePlayer)){
-                System.out.println("Red player Wins ");
-                break;
+
+                    System.out.println("Red Player moved to: ");
+                    gameInstance.printBoardState(gameBoard);
+
+                    if (gameInstance.gameOver(gameBoard,bluePlayer)){
+//                        int score = gameInstance.reduceOppOptions(gameBoard,redPlayer);
+//                        int scoreb = gameInstance.reduceOppOptions(gameBoard,bluePlayer);
+//                System.out.println("Score by adjacent buildings is for blue: "+ score);
+//                System.out.println("Score by adjacent buildings is for red: "+ scoreb);
+
+
+                        System.out.println("Red player Wins ");
+                        redwins +=1;
+                        break;
+                    }
+
+
+
+                }catch (InvalidMoveException invalidMoveException){
+                    invalidMoveException.printStackTrace();
+                }
             }
 
 
 
-
-        }catch (InvalidMoveException invalidMoveException){
-            invalidMoveException.printStackTrace();
-        }
-    }
-
-
-
-
+        }//end of for loop
+        System.out.println("Average moves per game = " + moveCount/50);
+        System.out.println("Red wins / 100: " + redwins );
+        System.out.println("Blue wins /100: " + bluewins);
 
 
 //        Player activePlayer = bluePlayer;
@@ -225,28 +257,36 @@ public class SantoriniMain {
 
 
 
-
-        //-----------------------------------------Two Person Human game----------------------------------------------//
-
-//        while (!gameInstance.gameOver()){
+//
+//        //-----------------------------------------Two Person Human game----------------------------------------------//
+//        Player activePlayer = bluePlayer;
+//        Player otherPlayer = redPlayer;
+//        Player tmp = null;
+//        Boolean ableToMove = false;
+//        while (!gameInstance.gameOver(gameBoard,activePlayer)){
 //            try {
 //
 //                //Initial human playable game with no building
-//                System.out.println(activePlayer.getName() + " Player make your move");
+//                System.out.println(activePlayer.getName() + " Player make your move, enter b1 or b2 for the desired builder, then followed by the compass point move");
 //                String input = scanner.nextLine();
-//                ableToMove = activePlayer.moveBuilder(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
+//                if (input.equals("b1")){
+//                    input = scanner.nextLine();
+//                    ableToMove = activePlayer.moveBuilder(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
+//                    gameInstance.print();
+//                    input = scanner.nextLine();
+//                    activePlayer.buildLevel(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
+//                    gameInstance.print();
 //
-//                //Check situation where player loses by
-//                if (!ableToMove){
-//                    tmp = otherPlayer;
-//                    otherPlayer = activePlayer;
-//                    activePlayer = tmp;
-//                    break;
+//
+//                }else if (input.equals("b2")){
+//                    input = scanner.nextLine();
+//                    ableToMove = activePlayer.moveBuilder(gameBoard,activePlayer.builder2,moveHashMap.get(input.toUpperCase()));
+//                    gameInstance.print();
+//                    input = scanner.nextLine();
+//                    activePlayer.buildLevel(gameBoard,activePlayer.builder2,moveHashMap.get(input.toUpperCase()));
+//                    gameInstance.print();
 //                }
-//                gameInstance.print();
-//                input = scanner.nextLine();
-//                activePlayer.buildLevel(gameBoard,activePlayer.builder1,moveHashMap.get(input.toUpperCase()));
-//                gameInstance.print();
+//
 //                tmp = otherPlayer;
 //                otherPlayer = activePlayer;
 //                activePlayer = tmp;
@@ -256,7 +296,7 @@ public class SantoriniMain {
 //                invalidMoveException.printStackTrace();
 //            }
 //        } System.out.println(activePlayer.getName()+" has Won the game");
-
+//
 
     }//End of main
 

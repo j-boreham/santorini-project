@@ -109,6 +109,7 @@ public class Player {
         List<Move> validMoves = getValidMoveList(board,builder);
 
         if (validMoves.isEmpty()){
+            System.out.println("No available moves, maybe a glitch");
             return false;
             //throw new InvalidMoveException("No Valid Moves");
         }
