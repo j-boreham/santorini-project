@@ -65,13 +65,11 @@ public class Player {
 
     }
 
-    //Will need to handle builders 1 & 2 at some point get builders at location or something?
 
     //Method handling the build part of a players turn.
     public void buildLevel(Tile[][][] board,BuilderPiece builder, Move move) throws InvalidMoveException{
 
         List<Move> validBuilds = getValidBuildList(board, builder);
-        builder.printBuilderStats();
         int zCoordinate = 0;
         int xCoordinate = builder.getxCoordinate();
         int yCoordinate = builder.getyCoordinate();
@@ -83,7 +81,7 @@ public class Player {
             }
         }
         if (inList){
-            builder.printBuilderStats();
+
             xCoordinate += move.getX();
             yCoordinate += move.getY();
 
@@ -93,7 +91,6 @@ public class Player {
                 System.out.println(zCoordinate);
             }
             if (zCoordinate < 4 && !(board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithBlueBuilder()||board[zCoordinate][xCoordinate][yCoordinate].isOccupiedWithRedBuilder())){
-                builder.printBuilderStats();
                 board[zCoordinate][xCoordinate][yCoordinate].setOccupiedWithBuilding(true);
             }else throw new InvalidMoveException("oops Cant build there, try again");
         }else throw new InvalidMoveException("oops Cant build there, try again");
@@ -197,7 +194,6 @@ public class Player {
         int xCoordinate = builder.getxCoordinate();
         int yCoordinate = builder.getyCoordinate();
 
-            //builder.printBuilderStats();
             xCoordinate += move.getX();
             yCoordinate += move.getY();
 
